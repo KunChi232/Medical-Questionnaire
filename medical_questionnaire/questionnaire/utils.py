@@ -19,7 +19,7 @@ def createSession(u, _type, name):
     u.current_session = randomHash
     u.save()
     session = Record.objects.create(line_id = str(u.line_id), session_id = str(u.current_session), question_type = str(_type), 
-                                    name = str(name), user_select = str([]), next_question = 0, complete = 0)
+                                    name = str(name), user_select = str([]), next_question = 0, complete = 0, score = 0)
     session.save()
     return session
 
@@ -67,3 +67,21 @@ def calculateScore(u, session):
     session.save()
     return appendScore(u, session.question_type, session.name, score)
 
+def determineSummary(score, summay):
+    for i, intervel in enumerate(summay):
+        if i == 0:
+            if(score >= int(intervel.split('~')[0])):
+                return summay[intervel]
+        elif i == len(summay) - 1:
+            if(score <= int(intervel.split('~')[1])):
+                return summay[intervel]
+        else:
+            temp = intervel.split('~')
+            if(int(temp[0]) <= score and score <= int(temp[1])):
+                return summay[intervel]
+
+def concateSummaryText(summary):
+    result = []
+    for i in range(len(summary['params']) - 1):
+        result.append(summary['params']['text'+str(i+1)])
+    return result

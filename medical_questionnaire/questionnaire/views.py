@@ -18,15 +18,15 @@ def startQuestion(request):
         u = ut.createUser(line_id)
         session = ut.createSession(u, _type, name)
         questions = json.loads(questionnaire.questions)
-        wellcome = json.loads(questionnaire.wellcome)
-        return JsonResponse({'questionCount' : len(questions), 'wellcome': wellcome[0]['params']['text'], 'sticker': wellcome[1]['params']['sticker']})
+        welcome = json.loads(questionnaire.wellcome)
+        return JsonResponse({'questionCount' : len(questions), 'welcome': welcome[0]['params']['text'], 'sticker': welcome[1]['params']['sticker']})
     
     else:
         if(ut.getSession(line_id, u.current_session).complete != 0):
             session = ut.createSession(u, _type, name)
             questions = json.loads(questionnaire.questions)
-            wellcome = json.loads(questionnaire.wellcome)
-            return JsonResponse({'questionCount' : len(questions), 'wellcome': wellcome[0]['params']['text'], 'sticker': wellcome[1]['params']['sticker']})
+            welcome = json.loads(questionnaire.wellcome)
+            return JsonResponse({'questionCount' : len(questions), 'welcome': welcome[0]['params']['text'], 'sticker': welcome[1]['params']['sticker']})
 
         else:
             return JsonResponse({'failed':'session not yet complete or exit, please use getQuestion or exit api to completed'})
@@ -84,7 +84,6 @@ def selectAnswer(request):
         return JsonResponse({'isEnd' : False})
 
 def getSummary(request):
-
     request = json.loads(request.body)
     line_id = request['line_id']
     u = ut.getUser(line_id)
@@ -92,13 +91,32 @@ def getSummary(request):
         return JsonResponse({'failed':'user not exist'})
 
     session = ut.getSession(line_id, u.current_session)
+    if(session.complete == 0):
+        return JsonResponse({'failed':'Not yet completed, please finish whole question first'})
     questionnaire = ut.getQuestionnaire(session.question_type, session.name)
 
     summary = json.loads(questionnaire.summary)
-    
+    score = session.score
+    summary = ut.determineSummary(score, summary)    
 
+    if('suggest' in summary):
+        suggestion = True
+        suggest = summary['suggest']
+    else:
+        suggestion = False
+        suggest = {}
 
-    return JsonResponse({'failed' : 'Not yet finished'})
+    return JsonResponse({'score' : score, 'text' : ut.concateSummaryText(summary), 'sticker':summary['params']['sticker'], 'suggestion':suggestion, 'suggest':suggest})
 
 def exit(request):
-    return JsonResponse({'failed' : 'Not yet finished'})
+    request = json.loads(request.body)
+    line_id = request['line_id']
+    u = ut.getUser(line_id)
+    if(u is False):
+        return JsonResponse({'failed':'user not exist'})
+
+    session = ut.getSession(line_id, u.current_session)
+    session.complete = 2
+    session.save()
+
+    return JsonResponse({'isEnd' : True})
