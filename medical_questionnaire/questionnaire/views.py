@@ -38,7 +38,11 @@ def getQuestion(request):
     u = ut.getUser(line_id)
     if(u is False):
         return JsonResponse({'failed':'user not exist'})
+
     session = ut.getSession(line_id, u.current_session)
+    if(session.complete != 0):
+        return JsonResponse({'failed':'session already closed'})
+
     questionnaire = ut.getQuestionnaire(session.question_type, session.name)
 
     next_question = session.next_question
@@ -68,6 +72,9 @@ def selectAnswer(request):
         return JsonResponse({'failed':'user not exist'})
 
     session = ut.getSession(line_id, u.current_session)
+    if(session.complete != 0):
+        return JsonResponse({'failed':'session already closed'})
+
     questionnaire = ut.getQuestionnaire(session.question_type, session.name)
 
     if(len(json.loads(session.user_select)) == session.next_question): 
@@ -116,6 +123,8 @@ def exit(request):
         return JsonResponse({'failed':'user not exist'})
 
     session = ut.getSession(line_id, u.current_session)
+    if(session.complete != 0):
+        return JsonResponse({'failed':'session already closed'})
     session.complete = 2
     session.save()
 
