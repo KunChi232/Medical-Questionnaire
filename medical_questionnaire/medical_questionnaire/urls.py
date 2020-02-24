@@ -19,5 +19,8 @@ import questionnaire.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('medical_questionnaire/startQuestion', questionnaire.views.startQuestion),
-    path('medical_questionnaire/getQuestion', questionnaire.views.getQuestion)
+    path('medical_questionnaire/getQuestion', questionnaire.views.getQuestion),
+    path('medical_questionnaire/selectAnswer', questionnaire.views.selectAnswer),
+    path('medical_questionnaire/getSummary', questionnaire.views.getSummary),
+    path('medical_questionnaire/exit', questionnaire.views.exit)
 ]

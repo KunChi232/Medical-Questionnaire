@@ -9,13 +9,12 @@ def startQuestion(request):
     request = json.loads(request.body)
     line_id = request['line_id']
     _type = request['type']
+
     name = ut.getQuestionnaireNameByType(_type)
     questionnaire = ut.getQuestionnaire(_type, name)
-
     u = ut.getUser(line_id)
 
-    if(u is None):
-
+    if(u is False):
         u = ut.createUser(line_id)
         session = ut.createSession(u, _type, name)
         questions = json.loads(questionnaire.questions)
@@ -37,6 +36,8 @@ def getQuestion(request):
     line_id = request['line_id']
 
     u = ut.getUser(line_id)
+    if(u is False):
+        return JsonResponse({'failed':'user not exist'})
     session = ut.getSession(line_id, u.current_session)
     questionnaire = ut.getQuestionnaire(session.question_type, session.name)
 
@@ -58,10 +59,46 @@ def getQuestion(request):
                         'actionCount' : question['params']['actionCount'], "action" : ut.getActionList(question)})
 
 def selectAnswer(request):
-    pass
+    request = json.loads(request.body)
+    line_id = request['line_id']
+    user_select = request['userSelect']
+
+    u = ut.getUser(line_id)
+    if(u is False):
+        return JsonResponse({'failed':'user not exist'})
+
+    session = ut.getSession(line_id, u.current_session)
+    questionnaire = ut.getQuestionnaire(session.question_type, session.name)
+
+    if(len(json.loads(session.user_select)) == session.next_question): 
+        return JsonResponse({'failed':'you need to get question first'})
+
+    ut.appendUserSelect(session, user_select)
+
+    if(len(json.loads(session.user_select)) == questionnaire.question_count):
+        session.complete = 1
+        session.save()
+        ut.calculateScore(u, session)
+        return JsonResponse({'isEnd' : True})
+    else:
+        return JsonResponse({'isEnd' : False})
 
 def getSummary(request):
-    pass
+
+    request = json.loads(request.body)
+    line_id = request['line_id']
+    u = ut.getUser(line_id)
+    if(u is False):
+        return JsonResponse({'failed':'user not exist'})
+
+    session = ut.getSession(line_id, u.current_session)
+    questionnaire = ut.getQuestionnaire(session.question_type, session.name)
+
+    summary = json.loads(questionnaire.summary)
+    
+
+
+    return JsonResponse({'failed' : 'Not yet finished'})
 
 def exit(request):
-    pass
+    return JsonResponse({'failed' : 'Not yet finished'})

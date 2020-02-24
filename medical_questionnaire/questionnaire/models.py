@@ -29,6 +29,7 @@ class Record(models.Model):
     user_select = models.TextField()
     next_question = models.IntegerField()
     complete = models.IntegerField()
+    score = models.IntegerField()
     create_date = models.DateTimeField()
 
     class Meta:
