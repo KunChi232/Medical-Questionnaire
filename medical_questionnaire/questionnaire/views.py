@@ -10,24 +10,23 @@ def startQuestion(request):
     line_id = request['line_id']
     _type = request['type']
     name = ut.getQuestionnaireNameByType(_type)
-    question = ut.getQuestionnaire(_type, name)
+    questionnaire = ut.getQuestionnaire(_type, name)
 
-    u = Users.objects.filter(line_id = line_id)
+    u = ut.getUser(line_id)
 
-    if(int(u.count()) == 0):
+    if(u is None):
 
         u = ut.createUser(line_id)
         session = ut.createSession(u, _type, name)
-        questions = ast.literal_eval(question.questions)
-        wellcome = ast.literal_eval(question.wellcome)
-        return JsonResponse({'questionCount' : len(question.questions), 'wellcome': wellcome[0]['params']['text'], 'sticker': wellcome[1]['params']['sticker']})
+        questions = json.loads(questionnaire.questions)
+        wellcome = json.loads(questionnaire.wellcome)
+        return JsonResponse({'questionCount' : len(questions), 'wellcome': wellcome[0]['params']['text'], 'sticker': wellcome[1]['params']['sticker']})
     
     else:
-        u = u[0]
         if(ut.getSession(line_id, u.current_session).complete != 0):
             session = ut.createSession(u, _type, name)
-            questions = ast.literal_eval(question.questions)
-            wellcome = ast.literal_eval(question.wellcome)
+            questions = json.loads(questionnaire.questions)
+            wellcome = json.loads(questionnaire.wellcome)
             return JsonResponse({'questionCount' : len(questions), 'wellcome': wellcome[0]['params']['text'], 'sticker': wellcome[1]['params']['sticker']})
 
         else:
@@ -36,9 +35,27 @@ def startQuestion(request):
 def getQuestion(request):
     request = json.loads(request.body)
     line_id = request['line_id']
+
     u = ut.getUser(line_id)
     session = ut.getSession(line_id, u.current_session)
-    question = ut.getQuestionnaire(session.question_type, session.name)
+    questionnaire = ut.getQuestionnaire(session.question_type, session.name)
+
+    next_question = session.next_question
+
+    if(next_question == questionnaire.question_count):
+        return JsonResponse({'failed':'exceed question count, you need to start a new question'})
+
+    if(len(json.loads(session.user_select)) != next_question): 
+        return JsonResponse({'failed':'uesr need to select answer before getting new question'})
+
+    questions = json.loads(questionnaire.questions)
+    question = questions[next_question]
+
+    session.next_question = next_question + 1
+    session.save()
+
+    return JsonResponse({'title' : question['params']['title'], 'text' : question['params']['text'],
+                        'actionCount' : question['params']['actionCount'], "action" : ut.getActionList(question)})
 
 def selectAnswer(request):
     pass

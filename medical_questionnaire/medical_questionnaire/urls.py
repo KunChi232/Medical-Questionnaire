@@ -18,5 +18,6 @@ from django.urls import path, include
 import questionnaire.views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('medical_questionnaire/startQuestion', questionnaire.views.startQuestion)
+    path('medical_questionnaire/startQuestion', questionnaire.views.startQuestion),
+    path('medical_questionnaire/getQuestion', questionnaire.views.getQuestion)
 ]

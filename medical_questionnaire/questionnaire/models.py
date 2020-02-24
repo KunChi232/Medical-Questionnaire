@@ -11,6 +11,7 @@ from django.db import models
 class Question(models.Model):
     question_type = models.TextField()
     name = models.TextField()
+    question_count = models.IntegerField()
     wellcome = models.TextField()
     questions = models.TextField()
     summary = models.TextField()

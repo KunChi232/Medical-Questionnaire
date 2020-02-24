@@ -9,7 +9,9 @@ def createUser(line_id):
 
 def getUser(line_id):
     u = Users.objects.filter(line_id = line_id)
-    return u
+    if(u.count() == 0):
+        return None
+    return u[0]
 
 def createSession(u, _type, name):
     randomHash = secrets.token_hex(nbytes=16)
@@ -32,8 +34,12 @@ def getQuestionnaire(_type, name):
 
 def getQuestionnaireNameByType(_type):
     question = Question.objects.filter(question_type = _type)
-    print(question)
     _len = len(question)
     index = random.randint(0, _len - 1)
-    print(question[index].name)
     return question[index].name
+
+def getActionList(question):
+    actions = []
+    for i in range(question['params']['actionCount']):
+        actions.append(question['params']['actions.'+str(i)]['text'])
+    return actions
