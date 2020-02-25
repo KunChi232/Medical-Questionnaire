@@ -22,5 +22,6 @@ urlpatterns = [
     path('medical_questionnaire/getQuestion', questionnaire.views.getQuestion),
     path('medical_questionnaire/selectAnswer', questionnaire.views.selectAnswer),
     path('medical_questionnaire/getSummary', questionnaire.views.getSummary),
+    path('medical_questionnaire/getScore', questionnaire.views.getScore),
     path('medical_questionnaire/exit', questionnaire.views.exit)
 ]

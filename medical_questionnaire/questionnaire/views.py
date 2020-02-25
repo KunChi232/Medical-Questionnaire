@@ -64,6 +64,7 @@ def getQuestion(request):
 
 def selectAnswer(request):
     request = json.loads(request.body)
+    print(request)
     line_id = request['line_id']
     user_select = request['userSelect']
 
@@ -78,7 +79,7 @@ def selectAnswer(request):
     questionnaire = ut.getQuestionnaire(session.question_type, session.name)
 
     if(len(json.loads(session.user_select)) == session.next_question): 
-        return JsonResponse({'failed':'you need to get question first'})
+        return JsonResponse({'failed':'you need to select question first'})
 
     ut.appendUserSelect(session, user_select)
 
@@ -129,3 +130,11 @@ def exit(request):
     session.save()
 
     return JsonResponse({'isEnd' : True})
+
+def getScore(request):
+    request = json.loads(request.body)
+    line_id = request['line_id']
+    u = ut.getUser(line_id)
+    if(u is False):
+        return JsonResponse({'failed':'user not exist'})
+    return JsonResponse({'score':u.scores})

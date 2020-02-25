@@ -46,7 +46,7 @@ def getActionList(question):
 def appendUserSelect(session, user_select):
 
     select_list = json.loads(session.user_select)
-    select_list.append(user_select)
+    select_list.append(int(user_select))
     session.user_select = str(select_list)
     session.save()
 
