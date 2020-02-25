@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import questionnaire.views
+import questionnaire.views, areyousick.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('medical_questionnaire/questionnaire/startQuestion', questionnaire.views.startQuestion),
@@ -23,5 +23,8 @@ urlpatterns = [
     path('medical_questionnaire/questionnaire/selectAnswer', questionnaire.views.selectAnswer),
     path('medical_questionnaire/questionnaire/getSummary', questionnaire.views.getSummary),
     path('medical_questionnaire/questionnaire/getScore', questionnaire.views.getScore),
-    path('medical_questionnaire/questionnaire/exit', questionnaire.views.exit)
+    path('medical_questionnaire/questionnaire/exit', questionnaire.views.exit),
+    path('medical_questionnaire/areyousick/startQuestion', areyousick.views.startQuestion),
+    path('medical_questionnaire/areyousick/selectOption', areyousick.views.selectOption),
+    path('medical_questionnaire/areyousick/exit', areyousick.views.exit),
 ]
