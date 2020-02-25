@@ -18,10 +18,10 @@ from django.urls import path, include
 import questionnaire.views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('medical_questionnaire/startQuestion', questionnaire.views.startQuestion),
-    path('medical_questionnaire/getQuestion', questionnaire.views.getQuestion),
-    path('medical_questionnaire/selectAnswer', questionnaire.views.selectAnswer),
-    path('medical_questionnaire/getSummary', questionnaire.views.getSummary),
-    path('medical_questionnaire/getScore', questionnaire.views.getScore),
-    path('medical_questionnaire/exit', questionnaire.views.exit)
+    path('medical_questionnaire/questionnaire/startQuestion', questionnaire.views.startQuestion),
+    path('medical_questionnaire/questionnaire/getQuestion', questionnaire.views.getQuestion),
+    path('medical_questionnaire/questionnaire/selectAnswer', questionnaire.views.selectAnswer),
+    path('medical_questionnaire/questionnaire/getSummary', questionnaire.views.getSummary),
+    path('medical_questionnaire/questionnaire/getScore', questionnaire.views.getScore),
+    path('medical_questionnaire/questionnaire/exit', questionnaire.views.exit)
 ]
