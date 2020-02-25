@@ -7,6 +7,7 @@ import json, ast
 
 def startQuestion(request):
     request = json.loads(request.body)
+    print(request)
     line_id = request['line_id']
     _type = request['type']
 
@@ -33,6 +34,7 @@ def startQuestion(request):
         
 def getQuestion(request):
     request = json.loads(request.body)
+    print(request)
     line_id = request['line_id']
 
     u = ut.getUser(line_id)
@@ -65,6 +67,7 @@ def getQuestion(request):
 def selectAnswer(request):
     request = json.loads(request.body)
     print(request)
+    print(request)
     line_id = request['line_id']
     user_select = request['userSelect']
 
@@ -93,6 +96,7 @@ def selectAnswer(request):
 
 def getSummary(request):
     request = json.loads(request.body)
+    print(request)
     line_id = request['line_id']
     u = ut.getUser(line_id)
     if(u is False):
@@ -118,6 +122,7 @@ def getSummary(request):
 
 def exit(request):
     request = json.loads(request.body)
+    print(request)
     line_id = request['line_id']
     u = ut.getUser(line_id)
     if(u is False):
@@ -133,6 +138,7 @@ def exit(request):
 
 def getScore(request):
     request = json.loads(request.body)
+    print(request)
     line_id = request['line_id']
     u = ut.getUser(line_id)
     if(u is False):
