@@ -10,6 +10,9 @@ def startQuestion(request):
     print(request)
     line_id = request['line_id']
     symptoms_type = request['type']
+    symptoms = Symptoms.objects.using('areyousick').filter(symptoms_type = symptoms_type)
+    if(int(symptoms.count()) == 0):
+        return JsonResponse({'failed':'type not found'})
     u = ut.getUser(line_id)
     if(u is False):
         u = ut.createUser(line_id)

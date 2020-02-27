@@ -33,6 +33,8 @@ def getQuestionnaire(_type, name):
 
 def getQuestionnaireNameByType(_type):
     question = Question.objects.filter(question_type = _type)
+    if(int(question.count()) == 0):
+        return False
     _len = len(question)
     index = random.randint(0, _len - 1)
     return question[index].name
