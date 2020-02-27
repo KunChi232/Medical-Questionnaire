@@ -14,7 +14,7 @@ def startQuestion(request):
     name = ut.getQuestionnaireNameByType(_type)
     if(name is False):
         return JsonResponse({'failed':'questionnaire not found'})
-    questionnaire = Question.objects.filter(question_type = _type, name = name)
+    questionnaire = ut.getQuestionnaire(_type, name)
 
     u = ut.getUser(line_id)
 
