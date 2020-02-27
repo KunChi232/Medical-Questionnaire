@@ -83,6 +83,14 @@ DATABASES = {
         'PASSWORD': 'iir_5757',
         'HOST': '140.116.247.183',
         'PORT': '3306'
+    },
+    'areyousick': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'are_you_sick',
+        'USER': 'iir',
+        'PASSWORD': 'iir_5757',
+        'HOST': '140.116.247.183',
+        'PORT': '3306'
     }
 }
 
